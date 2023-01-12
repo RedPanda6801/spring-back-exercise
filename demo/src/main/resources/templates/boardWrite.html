@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Title</title>
+</head>
+<style>
+    .layout {
+        display: grid;
+        text-align : center;
+        grid-template-rows: 200px 800px;
+    }
+    .input-area {
+        background-color: blue;
+    }
+    .post-area {
+        background-color: red;
+    }
+</style>
+<body>
+    <div class="layout">
+        <div class="input-area">
+            <form action="/board/add-board" method="post">
+                제목 : <input name="title"/>
+                <br>
+                내용 : <textarea name="content"></textarea>
+                <br>
+                <button type="submit">작성</button>
+            </form>
+        </div>
+        <div class="post-area">
+            게시글 목록 : <div id="post">
+            <div>게시글 1</div>
+            <div>게시글 2</div>
+        </div>
+        </div>
+    </div>
+</body>
+</html>
