@@ -16,7 +16,7 @@ public class BoardService {
 
     // 글 작성
     public void write(Board board){
-        System.out.println(board.getId());
+
         boardRepository.save(board);
     }
 
@@ -30,5 +30,10 @@ public class BoardService {
 
         // Optional 값으로 데이터를 받아오기 때문에 get으로 받아와야함
         return boardRepository.findById(id).get();
+    }
+
+    public void delete(Integer id){
+
+        boardRepository.deleteById(id);
     }
 }

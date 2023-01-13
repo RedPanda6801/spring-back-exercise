@@ -5,6 +5,7 @@ import com.study.demo.entity.Board;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -54,4 +55,10 @@ public class BoardController {
         return "boardView";
     }
 
+    @GetMapping("/board/delete")
+    public String deleteBoard(Integer id){
+        boardService.delete(id);
+
+        return "redirect:/board/list";
+    }
 }
