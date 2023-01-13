@@ -16,17 +16,24 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
 
+    // 값 리턴 시에 responsebody를 달아 준다
+    @GetMapping("/")
+    @ResponseBody
+    public String main(){
+        String hello = "Hello World";
+        return hello;
+    }
+
     // 페이지 매핑 시 확장자(html) 제외하고 text 리턴
     @GetMapping("/board")
     public String boardWriteForm(){
         return "boardWrite";
     }
 
-    // 값 리턴 시에 responsebody를 달아 준다
-    @GetMapping("/")
-    @ResponseBody
-    public String main(){
-        return "Hello World";
+    @GetMapping("/board/list")
+    public String boardList(Model model){
+        model.addAttribute("list", boardService.boardList());
+        return "boardList";
     }
 
     // 게시글 가져오는 POST 요청
@@ -39,9 +46,12 @@ public class BoardController {
         return "";
     }
 
-    @GetMapping("/board/get-list")
-    public String boardList(Model model){
-        model.addAttribute("list", boardService.boardList());
-        return "boardList";
+    @GetMapping("/board/view")
+    // board/view?id=1 => 파라미터의 id로 들어감
+    public String boardView(Model model, Integer id){
+
+        model.addAttribute("board", boardService.boardView(id));
+        return "boardView";
     }
+
 }
