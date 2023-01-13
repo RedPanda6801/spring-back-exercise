@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Title</title>
+</head>
+<style>
+    .layout {
+        display: grid;
+        text-align : center;
+        grid-template-rows: 200px 800px;
+    }
+    .input-area {
+        background-color: azure;
+    }
+    .post-area {
+        background-color: beige;
+    }
+</style>
+<body>
+<div class="layout">
+    <div class="input-area">
+        <form th:action="@{/board/update/{id}(id=${board.id})}" method="post">
+            제목 : <input name="title" th:value="${board.title}"/>
+            <br>
+            내용 : <textarea name="content" th:text="${board.content}"></textarea>
+            <br>
+            <button type="submit">수정</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
