@@ -27,7 +27,13 @@ public class UserController {
         if(userTmp != null){
             return "redirect:/sign";
         }
-        userService.createUser(user);
-        return "login";
+        Boolean isCreated = userService.createUser(user);
+        if(!isCreated){
+            // DB 저장 도중에 예외가 발생하면 다시 돌아감
+            // 알람 띄워주는 기능 추가 필요
+            return "redirect:/sign";
+        }
+        // redirect 시에 URL로 리턴됨
+        return "redirect:/login";
     }
 }

@@ -23,10 +23,12 @@ public class UserService {
         }
         return userTmp;
     }
+    // 생성 시에 비밀번호의 해시화가 필요하다.
     public Boolean createUser(User user){
         try{
             userRepository.save(user);
         }catch(Exception e){
+            // 실패 시에 whitePage로 넘어가지 않도록 처리함
             return false;
         }
         return true;
