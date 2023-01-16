@@ -17,11 +17,11 @@ public class BoardController {
     // 값 리턴 시에 responsebody를 달아 준다
     @GetMapping("/")
     @ResponseBody
+    // Token이 없으면 로그인 화면으로 이동하도록 해야함
     public String main() {
         String hello = "Hello World";
         return hello;
     }
-
     // 페이지 매핑 시 확장자(html) 제외하고 text 리턴
     @GetMapping("/board")
     public String boardWriteForm() {
@@ -47,8 +47,9 @@ public class BoardController {
     @GetMapping("/board/view")
     // board/view?id=1 => 파라미터의 id로 들어감
     public String boardView(Model model, Integer id) {
-
+        System.out.println(model);
         model.addAttribute("board", boardService.boardView(id));
+        System.out.println(model);
         return "boardView";
     }
 
