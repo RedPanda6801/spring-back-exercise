@@ -21,7 +21,6 @@ public class BoardController {
         String hello = "Hello World";
         return hello;
     }
-
     // 페이지 매핑 시 확장자(html) 제외하고 text 리턴
     @GetMapping("/board")
     public String boardWriteForm() {
@@ -47,8 +46,9 @@ public class BoardController {
     @GetMapping("/board/view")
     // board/view?id=1 => 파라미터의 id로 들어감
     public String boardView(Model model, Integer id) {
-
+        System.out.println(model);
         model.addAttribute("board", boardService.boardView(id));
+        System.out.println(model);
         return "boardView";
     }
 
