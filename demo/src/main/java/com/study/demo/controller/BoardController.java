@@ -14,14 +14,6 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
 
-    // 값 리턴 시에 responsebody를 달아 준다
-    @GetMapping("/")
-    @ResponseBody
-    // Token이 없으면 로그인 화면으로 이동하도록 해야함
-    public String main() {
-        String hello = "Hello World";
-        return hello;
-    }
     // 페이지 매핑 시 확장자(html) 제외하고 text 리턴
     @GetMapping("/board")
     public String boardWriteForm() {
