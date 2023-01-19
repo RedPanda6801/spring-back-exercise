@@ -13,27 +13,59 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/sign")
-    public String signUpPage() {
+    @GetMapping("/")
+    // Token이 없으면 로그인 화면으로 이동하도록 해야함
+    public String main() {
+        // 토큰 확인하는 변수
+        boolean isLoggedIn = true;
 
-        return "signup";
+        if(!isLoggedIn){
+            return "redirect:/auth/login";
+        }else {
+            return "redirect:/board";
+        }
+    }
+    // 페이지 매핑
+    // 회원가입 화면으로 redirect
+    @GetMapping("/auth/sign")
+    public String signUpForm() { return "signup"; }
+    // 로그인화면으로 redirect
+    @GetMapping("/auth/login")
+    public String loginForm(){
+        return "login";
     }
 
-    @PostMapping("/sign/sign-up")
+
+    // 로그인 작업 수행
+    @PostMapping("/auth/login")
+    public String loginCheck(User user){
+        // 입력된 정보가 없으면 되돌아감 -> input값으로 받은 데이터는 null이 아닌 것 같다
+        if(user.getUserid() == "" || user.getPassword() == ""){
+            return "redirect:/auth/login";
+        }
+        // 유저 정보를 DB에서 확인
+        boolean isUser = userService.userAuth(user);
+        // login fail
+        if(!isUser){
+            return "redirect:/auth/login";
+        }
+        return "redirect:/";
+
+    }
+    @PostMapping("/auth/sign")
     public String signUp(User user) {
 
         // userid의 중복 확인하여 다시 회원가입 페이지로 돌아옴
         User userTmp = userService.getUser(user.getUserid());
         if(userTmp != null){
-            return "redirect:/sign";
+            return "redirect:/auth/sign";
         }
-        Boolean isCreated = userService.createUser(user);
+        boolean isCreated = userService.createUser(user);
         if(!isCreated){
             // DB 저장 도중에 예외가 발생하면 다시 돌아감
-            // 알람 띄워주는 기능 추가 필요
-            return "redirect:/sign";
+            return "redirect:/auth/sign";
         }
         // redirect 시에 URL로 리턴됨
-        return "redirect:/login";
+        return "redirect:/auth/login";
     }
 }
