@@ -2,7 +2,10 @@ package com.study.demo.controller;
 
 
 import com.study.demo.entity.Board;
+import com.study.demo.service.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +17,12 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
 
+//    private JWTService jwtService = new JWTService();
+
     // 페이지 매핑 시 확장자(html) 제외하고 text 리턴
     @GetMapping("/board")
     public String boardWriteForm() {
+
         return "boardWrite";
     }
 

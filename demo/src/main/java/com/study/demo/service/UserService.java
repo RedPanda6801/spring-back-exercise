@@ -3,7 +3,9 @@ package com.study.demo.service;
 import com.study.demo.entity.User;
 import com.study.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 
 @Service
@@ -11,8 +13,8 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-
     private BcryptService bcryptService = new BcryptService();
+    private JWTService jwtService = new JWTService();
 
     public User getUser(String userid){
         User userTmp = userRepository.findByUserid(userid);
@@ -38,7 +40,7 @@ public class UserService {
     }
 
     // 로그인 확인
-    public boolean userAuth(User user){
+    public String userAuth(User user){
         try{
             String userid = user.getUserid();
             String pass = user.getPassword();
@@ -46,19 +48,23 @@ public class UserService {
             User userTmp = userRepository.findByUserid(userid);
             // 아이디가 DB에 없을 시에 예외 처리
             if(userTmp == null){
-                return false;
+                return null;
             }
             // 비밀번호 불일치시 예외처리 - hash화된 비밀번호를 bcrypt로 비교
             boolean hashCheck = bcryptService.matchesBcrypt(pass, userTmp.getPassword(), 10);
-            System.out.println(String.format("해시값 비교 성공 : %s",hashCheck));
+            System.out.printf("해시값 비교 성공 : %s",hashCheck);
             if(!hashCheck){
-                return false;
+                return null;
             }
             // 모든 예외처리 통과시 로그인 성공
-            // 토큰을 부여해야 함
-            return true;
+            String token = jwtService.makeJwtToken(user.getId(), userid);
+            System.out.printf("부여받은 토큰 : %s%n", token);
+
+            // Model에 token을 같이 넘겨주어 프론트에서 localStorage에 저장하게끔 구현
+
+            return token;
         }catch(Exception e){
-            return false;
+            return null;
         }
     }
 }
