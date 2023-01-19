@@ -48,10 +48,14 @@ public class UserService {
             if(userTmp == null){
                 return false;
             }
-            // 비밀번호 불일치시 예외처리 - String Object는 equals()로 비교해야함
-            if(!pass.equals(userTmp.getPassword())){
+            // 비밀번호 불일치시 예외처리 - hash화된 비밀번호를 bcrypt로 비교
+            boolean hashCheck = bcryptService.matchesBcrypt(pass, userTmp.getPassword(), 10);
+            System.out.println(String.format("해시값 비교 성공 : %s",hashCheck));
+            if(!hashCheck){
                 return false;
             }
+            // 모든 예외처리 통과시 로그인 성공
+            // 토큰을 부여해야 함
             return true;
         }catch(Exception e){
             return false;
