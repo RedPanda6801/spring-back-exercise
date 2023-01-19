@@ -4,7 +4,6 @@ import com.study.demo.entity.User;
 import com.study.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -29,13 +28,10 @@ public class UserController {
     // 페이지 매핑
     // 회원가입 화면으로 redirect
     @GetMapping("/auth/sign")
-    public String signUpPage() {
-
-        return "signup";
-    }
+    public String signUpForm() { return "signup"; }
     // 로그인화면으로 redirect
     @GetMapping("/auth/login")
-    public String loginPage(){
+    public String loginForm(){
         return "login";
     }
 
