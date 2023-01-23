@@ -31,15 +31,15 @@
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>로그인</title>
 </head>
 <body class="text-center">
 <main class="form-signin w-100 m-auto">
-    <form id="form" action="/auth/login" method="post">
+
         <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
         <div class="form-floating">
             <input
-                    name="userid"
                     type="text"
                     class="form-control"
                     id="floatingInput"
@@ -49,7 +49,6 @@
         </div>
         <div class="form-floating">
             <input
-                    name="password"
                     type="password"
                     class="form-control"
                     id="floatingPassword"
@@ -59,8 +58,9 @@
         </div>
         <div style="display: flex">
             <button
+                    id="submit-btn"
                     class="w-100 btn btn-lg btn-primary"
-                    type="submit"
+                    type="button"
                     style="margin-right: 1%"
             >
                 Sign in
@@ -73,8 +73,21 @@
                 Sign up
             </button>
         </div>
-    </form>
 </main>
+<script>
+    const btn = document.getElementById("submit-btn");
+    const id = document.getElementById("floatingInput");
+    const pass = document.getElementById("floatingPassword");
+    btn.addEventListener("click", async ()=> {
+        const response = await axios.post("/auth/login", { name: null, phone:null, userid: id.value, password: pass.value});
+        if(!response.data) alert("잘못된 입력입니다");
+        else{
+            const token = response.data;
+            localStorage.setItem("token", token);
+            location.href= "/board/list";
+        }
+    });
+</script>
 </body>
 <style>
     html,

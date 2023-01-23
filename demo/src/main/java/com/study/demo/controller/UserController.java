@@ -4,8 +4,8 @@ import com.study.demo.entity.User;
 import com.study.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class UserController {
@@ -17,9 +17,9 @@ public class UserController {
     // Token이 없으면 로그인 화면으로 이동하도록 해야함
     public String main() {
         // 토큰 확인하는 변수
-        boolean isLoggedIn = true;
+        boolean login = true;
 
-        if(!isLoggedIn){
+        if(!login){
             return "redirect:/auth/login";
         }else {
             return "redirect:/board";
@@ -38,18 +38,21 @@ public class UserController {
 
     // 로그인 작업 수행
     @PostMapping("/auth/login")
-    public String loginCheck(User user){
+    @ResponseBody
+    public String loginCheck(@RequestBody User user){
         // 입력된 정보가 없으면 되돌아감 -> input값으로 받은 데이터는 null이 아닌 것 같다
         if(user.getUserid() == "" || user.getPassword() == ""){
-            return "redirect:/auth/login";
+            return null;
         }
         // 유저 정보를 DB에서 확인
-        boolean isUser = userService.userAuth(user);
+        String token = userService.userAuth(user);
         // login fail
-        if(!isUser){
-            return "redirect:/auth/login";
+        if(token == null) {
+            return null;
         }
-        return "redirect:/";
+
+         // 토큰을 헤더에 추가해야 한다....
+        return token;
 
     }
     @PostMapping("/auth/sign")
