@@ -37,16 +37,23 @@ public class BoardController {
     }
     @GetMapping("/board/get-list")
     @ResponseBody
-    public List<Board> boardList(HttpServletRequest request) throws ServletException {
+    public List<Board> boardList(HttpServletRequest request) {
+        // 로그인 정보 확인
         Claims token = jwtService.checkAuthorizationHeader(request);
         if(token == null) return null;
+        // 토큰 내의 페이로드 값을 가져와야 한다.
+        System.out.println(token);
+
         return boardService.boardList();
     }
 
     // 게시글 가져오는 POST 요청
     @PostMapping("/board/add-board")
-    public String addBoardWrite(Board board) {
-
+    public String addBoardWrite(HttpServletRequest request, Board board) {
+        // 로그인 정보 확인
+        Claims token = jwtService.checkAuthorizationHeader(request);
+        if(token == null) return null;
+        // board 정보 DB에 추가
         System.out.println(board.getId());
         boardService.write(board);
 
@@ -62,7 +69,11 @@ public class BoardController {
     }
 
     @GetMapping("/board/delete")
-    public String deleteBoard(Integer id) {
+    public String deleteBoard(HttpServletRequest request, Integer id) {
+        // 로그인 정보 확인
+        Claims token = jwtService.checkAuthorizationHeader(request);
+        if(token == null) return null;
+
         boardService.delete(id);
 
         return "redirect:/board/list";
@@ -75,7 +86,9 @@ public class BoardController {
     }
 
     @PostMapping("/board/update/{id}")
-    public String updateBoard(@PathVariable("id") Integer id, Board board) {
+    public String updateBoard(HttpServletRequest request, @PathVariable("id") Integer id, Board board) {
+        Claims token = jwtService.checkAuthorizationHeader(request);
+        if(token == null) return null;
 
         Board boardTmp = boardService.boardView(id);
         boardTmp.setTitle(board.getTitle());

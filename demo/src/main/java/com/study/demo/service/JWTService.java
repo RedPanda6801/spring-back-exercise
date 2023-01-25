@@ -2,12 +2,7 @@ package com.study.demo.service;
 
 import io.jsonwebtoken.*;
 import org.springframework.http.HttpHeaders;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.time.Duration;
 import java.util.Date;
 
@@ -21,7 +16,6 @@ public class JWTService {
                 .setIssuer("redpanda") // issuer 설정
                 .setIssuedAt(now) // 발급 시간 설정 (Date 객체만 가능)
                 .setExpiration(new Date(now.getTime() + Duration.ofMinutes(30).toMillis())) // 만료 시 설정 (Date 객체만 가능)
-                .claim("id", id)
                 .claim("userId", userid) // 비공개 클래임 설정 가능
                 .signWith(SignatureAlgorithm.HS256, "secret") // 시크릿 키 설정
                 .compact();
