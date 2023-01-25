@@ -38,18 +38,8 @@ public class BoardController {
     @GetMapping("/board/get-list")
     @ResponseBody
     public List<Board> boardList(HttpServletRequest request) throws ServletException {
-        try{
-            String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-            System.out.println(authorizationHeader);
-            String token = authorizationHeader.split(" ")[1];
-            System.out.println(token);
-            if(token.equals("null")){
-                return null;
-            }
-            Claims tokenCheck = jwtService.parseJwtToken(authorizationHeader);
-        }catch(ExpiredJwtException e) {
-            return null;
-        }
+        Claims token = jwtService.checkAuthorizationHeader(request);
+        if(token == null) return null;
         return boardService.boardList();
     }
 

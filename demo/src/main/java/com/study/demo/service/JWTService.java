@@ -1,9 +1,6 @@
 package com.study.demo.service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.springframework.http.HttpHeaders;
 
 import javax.servlet.FilterChain;
@@ -31,7 +28,7 @@ public class JWTService {
     }
 
 
-    public Claims parseJwtToken(String authorizationHeader) {
+    private Claims parseJwtToken(String authorizationHeader) {
         validationAuthorizationHeader(authorizationHeader); // (1)
         String token = extractToken(authorizationHeader); // (2)
 
@@ -41,11 +38,19 @@ public class JWTService {
                 .getBody();
     }
 
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        Claims claims = parseJwtToken(authorizationHeader);
-
-        filterChain.doFilter(request, response);
+    // JWT 토큰 확인
+    public Claims checkAuthorizationHeader (HttpServletRequest request){
+        try{
+            String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            String token = authorizationHeader.split(" ")[1];
+            System.out.println(token);
+            if(token.equals("null")){
+                return null;
+            }
+            return parseJwtToken(authorizationHeader);
+        }catch(ExpiredJwtException e) {
+            return null;
+        }
     }
 
 
