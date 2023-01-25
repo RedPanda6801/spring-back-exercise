@@ -3,33 +3,54 @@ package com.study.demo.controller;
 
 import com.study.demo.entity.Board;
 import com.study.demo.service.JWTService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.study.demo.service.BoardService;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class BoardController {
 
     @Autowired
     private BoardService boardService;
+    private JWTService jwtService = new JWTService();
 
 //    private JWTService jwtService = new JWTService();
 
     // 페이지 매핑 시 확장자(html) 제외하고 text 리턴
     @GetMapping("/board")
-    public String boardWriteForm() {
+    public String boardWritePage() {
 
         return "boardWrite";
     }
 
     @GetMapping("/board/list")
-    public String boardList(Model model) {
-        model.addAttribute("list", boardService.boardList());
+    public String boardListPage() {
         return "boardList";
+    }
+    @GetMapping("/board/get-list")
+    @ResponseBody
+    public List<Board> boardList(HttpServletRequest request) throws ServletException {
+        try{
+            String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            System.out.println(authorizationHeader);
+            String token = authorizationHeader.split(" ")[1];
+            System.out.println(token);
+            if(token.equals("null")){
+                return null;
+            }
+            Claims tokenCheck = jwtService.parseJwtToken(authorizationHeader);
+        }catch(ExpiredJwtException e) {
+            return null;
+        }
+        return boardService.boardList();
     }
 
     // 게시글 가져오는 POST 요청
@@ -42,12 +63,11 @@ public class BoardController {
         return "";
     }
 
-    @GetMapping("/board/view")
+    @GetMapping("/board/view/{id}")
     // board/view?id=1 => 파라미터의 id로 들어감
-    public String boardView(Model model, Integer id) {
-        System.out.println(model);
+    public String boardView(Model model, @PathVariable("id") Integer id) {
+        System.out.println(id);
         model.addAttribute("board", boardService.boardView(id));
-        System.out.println(model);
         return "boardView";
     }
 

@@ -1,35 +1,72 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>게시물 리스트 페이지</title>
 </head>
 <style>
-
+    a:hover{
+        color : orange;
+    }
+    .frame{
+        display : grid;
+        grid-template-columns : 50% 50%;
+    }
+    .container{
+        display: grid;
+        grid-template-rows : 50px;
+    }
 </style>
 <body>
-    <div class="container">
-        <table>
-            <thead>
-                <tr>
-                    <th>글번호</th>
-                    <th>제목</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="board : ${list}">
-                    <td th:text="${board.id}"></td>
-                    <td>
-                        <form action="/board/delete" method="delete">
-                            <a th:text="${board.title}" th:href="@{/board/view(id=${board.id})}"></a>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div id="board-list" class="container">
+        <div class="frame">
+            <div>글 번호</div>
+            <div>글 제목</div>
+        </div>
     </div>
+<script>
+    const listDiv = document.getElementById("board-list");
+    const renderList = async () => {
+        const token = localStorage.getItem("token");
+        const boardObj = await axios.get(
+            "/board/get-list",
+            {
+                headers: {Authorization : `Bearer ${token}`}
+            }
+        );
+        console.log(boardObj);
+        // 토큰이 없을 때의 예외처리
+        if(boardObj === null){
+            alert("로그인하세요");
+            location.href = "/auth/login";
+            return;
+        }
+        const boards = boardObj.data;
+        if(!boards || boards == ""){
+            alert("로그인하세요");
+            location.href = "/auth/login";
+            return;
+        }
+        boards.forEach((board)=>{
+            const newDiv = document.createElement("div");
+            newDiv.className = "frame";
+            const titleDiv = document.createElement("div");
+            const idDiv = document.createElement("div");
+            titleDiv.innerText = board.title;
+            titleDiv.id = board.id;
+            idDiv.innerText = board.id;
+            newDiv.appendChild(idDiv);
+            newDiv.appendChild(titleDiv);
+            listDiv.appendChild(newDiv);
+            newDiv.addEventListener("click", async ()=>{
+                location.href = `/board/view/${board.id}`;
+            })
+        });
+    };
+    renderList();
+</script>
 </body>
 </html>
