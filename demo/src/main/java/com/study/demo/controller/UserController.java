@@ -22,7 +22,7 @@ public class UserController {
         if(!login){
             return "redirect:/auth/login";
         }else {
-            return "redirect:/board";
+            return "redirect:/board/list";
         }
     }
     // 페이지 매핑

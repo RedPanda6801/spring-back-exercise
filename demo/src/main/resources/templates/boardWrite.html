@@ -5,6 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>Title</title>
 </head>
 <style>
@@ -23,18 +24,33 @@
 <body>
     <div class="layout">
         <div class="input-area">
-            <form action="/board/add-board" method="post">
-                제목 : <input name="title"/>
-                <br>
-                내용 : <textarea name="content"></textarea>
-                <br>
-                <button type="submit">작성</button>
-            </form>
-        </div>
-        <div class="post-area">
-            게시글 목록 : <div id="post">
-            </div>
+            제목 : <input id="title"/>
+            <br>
+            내용 : <textarea id="content"></textarea>
+            <br>
+            <button id="submit">작성</button>
         </div>
     </div>
+<script>
+    const title = document.getElementById("title");
+    const content = document.getElementById("content");
+    const submit_btn = document.getElementById("submit");
+
+    submit_btn.addEventListener("click", async ()=> {
+        const token = localStorage.getItem("token");
+        const addBoard = axios.post("/board/add-board",
+            { id:null, title: title.value, content: content.value},
+            {
+                    headers: {Authorization : `Bearer ${token}`}
+            });
+        if(addBoard == null){
+            alert("게시물 추가 실패");
+        }
+        else{
+            alert("게시물 추가 성공");
+            location.href = "/board/list";
+        }
+        });
+</script>
 </body>
 </html>
