@@ -21,6 +21,7 @@
     }
 </style>
 <body>
+    <button id="board-write" onclick="location.href='/board/write'">글쓰기</button>
     <div id="board-list" class="container">
         <div class="frame">
             <div>글 번호</div>
@@ -53,7 +54,7 @@
         boards.forEach((board)=>{
             const newDiv = document.createElement("div");
             newDiv.className = "frame";
-            const titleDiv = document.createElement("div");
+            const titleDiv = document.createElement("a");
             const idDiv = document.createElement("div");
             titleDiv.innerText = board.title;
             titleDiv.id = board.id;

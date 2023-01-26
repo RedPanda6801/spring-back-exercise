@@ -25,7 +25,7 @@ public class BoardController {
 //    private JWTService jwtService = new JWTService();
 
     // 페이지 매핑 시 확장자(html) 제외하고 text 리턴
-    @GetMapping("/board")
+    @GetMapping("/board/write")
     public String boardWritePage() {
 
         return "boardWrite";
@@ -49,15 +49,20 @@ public class BoardController {
 
     // 게시글 가져오는 POST 요청
     @PostMapping("/board/add-board")
-    public String addBoardWrite(HttpServletRequest request, Board board) {
+    @ResponseBody
+    public String addBoardWrite(@RequestBody Board board, HttpServletRequest request) {
         // 로그인 정보 확인
+        System.out.println(board);
         Claims token = jwtService.checkAuthorizationHeader(request);
         if(token == null) return null;
         // board 정보 DB에 추가
-        System.out.println(board.getId());
-        boardService.write(board);
-
-        return "";
+        try {
+            boardService.write(board);
+        }catch(Exception e){
+            System.out.println(e);
+            return null;
+        }
+        return "success";
     }
 
     @GetMapping("/board/view/{id}")

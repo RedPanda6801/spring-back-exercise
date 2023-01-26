@@ -37,7 +37,6 @@ public class JWTService {
         try{
             String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
             String token = authorizationHeader.split(" ")[1];
-            System.out.println(token);
             if(token.equals("null")){
                 return null;
             }
