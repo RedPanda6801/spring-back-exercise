@@ -32,12 +32,17 @@
     const listDiv = document.getElementById("board-list");
     const renderList = async () => {
         const token = localStorage.getItem("token");
-        const boardObj = await axios.get(
+        let boardObj = null;
+        try{
+            boardObj = await axios.get(
             "/board/get-list",
             {
                 headers: {Authorization : `Bearer ${token}`}
             }
         );
+        }catch(error){
+            console.log(error);
+        }
         console.log(boardObj);
         // 토큰이 없을 때의 예외처리
         if(boardObj === null){

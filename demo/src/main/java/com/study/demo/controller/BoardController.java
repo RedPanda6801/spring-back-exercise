@@ -2,16 +2,15 @@ package com.study.demo.controller;
 
 
 import com.study.demo.entity.Board;
+import com.study.demo.entity.User;
 import com.study.demo.service.JWTService;
+import com.study.demo.service.UserService;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.study.demo.service.BoardService;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -20,8 +19,10 @@ public class BoardController {
 
     @Autowired
     private BoardService boardService;
-    private JWTService jwtService = new JWTService();
 
+    @Autowired
+    private UserService userService;
+    private JWTService jwtService = new JWTService();
 //    private JWTService jwtService = new JWTService();
 
     // 페이지 매핑 시 확장자(html) 제외하고 text 리턴
@@ -35,6 +36,7 @@ public class BoardController {
     public String boardListPage() {
         return "boardList";
     }
+
     @GetMapping("/board/get-list")
     @ResponseBody
     public List<Board> boardList(HttpServletRequest request) {
@@ -42,10 +44,9 @@ public class BoardController {
         Claims token = jwtService.checkAuthorizationHeader(request);
         if(token == null) return null;
         // 토큰 내의 페이로드 값을 가져와야 한다.
-        System.out.println(token);
-
         return boardService.boardList();
     }
+
 
     // 게시글 가져오는 POST 요청
     @PostMapping("/board/add-board")
@@ -56,6 +57,11 @@ public class BoardController {
         Claims token = jwtService.checkAuthorizationHeader(request);
         if(token == null) return null;
         // board 정보 DB에 추가
+        String userid = token.get("userId").toString();
+        System.out.println(userid);
+        User user = userService.getUser(userid);
+        System.out.println(user);
+        board.setUser(user);
         try {
             boardService.write(board);
         }catch(Exception e){
