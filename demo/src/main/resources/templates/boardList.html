@@ -41,26 +41,21 @@
             }
         );
         }catch(error){
-            console.log(error);
+            // 토큰이 없을 때의 예외처리
+            if(error.response.status == 403){
+                alert("로그인하세요");
+                location.href = "/auth/login";
+                return;
+            }
         }
-        console.log(boardObj);
-        // 토큰이 없을 때의 예외처리
-        if(boardObj === null){
-            alert("로그인하세요");
-            location.href = "/auth/login";
-            return;
-        }
+
         const boards = boardObj.data;
-        if(!boards || boards == ""){
-            alert("로그인하세요");
-            location.href = "/auth/login";
-            return;
-        }
         boards.forEach((board)=>{
+            console.log(board);
             const newDiv = document.createElement("div");
             newDiv.className = "frame";
-            const titleDiv = document.createElement("a");
             const idDiv = document.createElement("div");
+            const titleDiv = document.createElement("a");
             titleDiv.innerText = board.title;
             titleDiv.id = board.id;
             idDiv.innerText = board.id;

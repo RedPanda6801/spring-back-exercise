@@ -3,6 +3,7 @@ package com.study.demo.controller;
 
 import com.study.demo.entity.Board;
 import com.study.demo.entity.User;
+import com.study.demo.exception.ForbiddenException;
 import com.study.demo.service.JWTService;
 import com.study.demo.service.UserService;
 import io.jsonwebtoken.Claims;
@@ -42,7 +43,9 @@ public class BoardController {
     public List<Board> boardList(HttpServletRequest request) {
         // 로그인 정보 확인
         Claims token = jwtService.checkAuthorizationHeader(request);
-        if(token == null) return null;
+        if(token == null) {
+            throw new ForbiddenException("403 Forbidden");
+        }
         // 토큰 내의 페이로드 값을 가져와야 한다.
         return boardService.boardList();
     }
