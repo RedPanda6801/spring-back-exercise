@@ -13,7 +13,7 @@
     }
     .frame{
         display : grid;
-        grid-template-columns : 50% 50%;
+        grid-template-columns : 25% 25% 50%;
     }
     .container{
         display: grid;
@@ -25,6 +25,7 @@
     <div id="board-list" class="container">
         <div class="frame">
             <div>글 번호</div>
+            <div>작성자</div>
             <div>글 제목</div>
         </div>
     </div>
@@ -41,30 +42,28 @@
             }
         );
         }catch(error){
-            console.log(error);
+            // 토큰이 없을 때의 예외처리
+            if(error.response.status == 403){
+                alert("로그인하세요");
+                location.href = "/auth/login";
+                return;
+            }
         }
-        console.log(boardObj);
-        // 토큰이 없을 때의 예외처리
-        if(boardObj === null){
-            alert("로그인하세요");
-            location.href = "/auth/login";
-            return;
-        }
+
         const boards = boardObj.data;
-        if(!boards || boards == ""){
-            alert("로그인하세요");
-            location.href = "/auth/login";
-            return;
-        }
         boards.forEach((board)=>{
+            console.log(board);
             const newDiv = document.createElement("div");
             newDiv.className = "frame";
-            const titleDiv = document.createElement("a");
             const idDiv = document.createElement("div");
+            const nameDiv = document.createElement("div");
+            const titleDiv = document.createElement("a");
+            nameDiv.innerText = board.userId;
             titleDiv.innerText = board.title;
             titleDiv.id = board.id;
             idDiv.innerText = board.id;
             newDiv.appendChild(idDiv);
+            newDiv.appendChild(nameDiv);
             newDiv.appendChild(titleDiv);
             listDiv.appendChild(newDiv);
             newDiv.addEventListener("click", async ()=>{

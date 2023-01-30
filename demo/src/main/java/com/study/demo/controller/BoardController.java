@@ -1,8 +1,10 @@
 package com.study.demo.controller;
 
 
+import com.study.demo.dto.BoardDto;
 import com.study.demo.entity.Board;
 import com.study.demo.entity.User;
+import com.study.demo.exception.ForbiddenException;
 import com.study.demo.service.JWTService;
 import com.study.demo.service.UserService;
 import io.jsonwebtoken.Claims;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import com.study.demo.service.BoardService;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class BoardController {
@@ -39,29 +42,34 @@ public class BoardController {
 
     @GetMapping("/board/get-list")
     @ResponseBody
-    public List<Board> boardList(HttpServletRequest request) {
+    public List<BoardDto> boardList(HttpServletRequest request) {
         // 로그인 정보 확인
         Claims token = jwtService.checkAuthorizationHeader(request);
-        if(token == null) return null;
+        if(token == null) {
+            throw new ForbiddenException("403 Forbidden");
+        }
         // 토큰 내의 페이로드 값을 가져와야 한다.
-        return boardService.boardList();
+        List<BoardDto> boardDtos = boardService.boardList().stream().map(BoardDto::new)
+                .collect(Collectors.toList());
+        return boardDtos;
     }
 
 
     // 게시글 가져오는 POST 요청
     @PostMapping("/board/add-board")
     @ResponseBody
-    public String addBoardWrite(@RequestBody Board board, HttpServletRequest request) {
+    public String addBoardWrite(@RequestBody BoardDto boardDto, HttpServletRequest request) {
         // 로그인 정보 확인
-        System.out.println(board);
         Claims token = jwtService.checkAuthorizationHeader(request);
         if(token == null) return null;
         // board 정보 DB에 추가
         String userid = token.get("userId").toString();
-        System.out.println(userid);
         User user = userService.getUser(userid);
-        System.out.println(user);
-        board.setUser(user);
+        Board board = Board.builder()
+                .content(boardDto.getContent())
+                .title(boardDto.getTitle())
+                .user(user)
+                .build();
         try {
             boardService.write(board);
         }catch(Exception e){
@@ -97,13 +105,12 @@ public class BoardController {
     }
 
     @PostMapping("/board/update/{id}")
-    public String updateBoard(HttpServletRequest request, @PathVariable("id") Integer id, Board board) {
+    public String updateBoard(HttpServletRequest request, @PathVariable("id") Integer id, BoardDto boardDto) {
         Claims token = jwtService.checkAuthorizationHeader(request);
         if(token == null) return null;
 
         Board boardTmp = boardService.boardView(id);
-        boardTmp.setTitle(board.getTitle());
-        boardTmp.setContent(board.getContent());
+        boardTmp.update(boardDto.getTitle(), boardDto.getContent());
         boardService.write(boardTmp);
 
         return "redirect:/board/list";

@@ -1,12 +1,14 @@
 package com.study.demo.entity;
 
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+@Getter
 @Entity
+@NoArgsConstructor
 public class Board {
 
     @Id
@@ -17,6 +19,20 @@ public class Board {
 
     private String content;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
     private User user;
+
+    @Builder
+    public Board(String title, String content, User user){
+        this.content = content;
+        this.title = title;
+        this.user = user;
+    }
+
+    public void update(String title, String content){
+        this.content = content;
+        this.title = title;
+    }
 }
