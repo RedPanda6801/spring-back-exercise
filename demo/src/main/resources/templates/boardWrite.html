@@ -38,18 +38,20 @@
 
     submit_btn.addEventListener("click", async ()=> {
         const token = localStorage.getItem("token");
-        const addBoard = axios.post("/board/add-board",
-            { id:null, title: title.value, content: content.value},
-            {
-                    headers: {Authorization : `Bearer ${token}`}
-            });
-        if(addBoard == null){
-            alert("게시물 추가 실패");
+        let addBoard = null;
+        try{
+            addBoard = axios.post("/board/add-board",
+                { id: null, title: title.value, content: content.value},
+                {
+                        headers: {Authorization : `Bearer ${token}`}
+                });
+        }catch(error){
+            console.log(error);
+            return;
         }
-        else{
-            alert("게시물 추가 성공");
-            location.href = "/board/list";
-        }
+            if(addBoard !== null){
+                alert("게시물 추가 성공");
+            }
         });
 </script>
 </body>
