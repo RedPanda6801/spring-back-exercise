@@ -26,7 +26,6 @@ public class BoardController {
     @Autowired
     private UserService userService;
     private JWTService jwtService = new JWTService();
-//    private JWTService jwtService = new JWTService();
 
     // 페이지 매핑 시 확장자(html) 제외하고 text 리턴
     @GetMapping("/board/write")
@@ -83,7 +82,7 @@ public class BoardController {
     // board/view?id=1 => 파라미터의 id로 들어감
     public String boardView(Model model, @PathVariable("id") Integer id) {
         System.out.println(id);
-        model.addAttribute("board", boardService.boardView(id));
+        model.addAttribute("board", boardService.getBoard(id));
         return "boardView";
     }
 
@@ -100,7 +99,7 @@ public class BoardController {
 
     @GetMapping("/board/modify/{id}")
     public String modifyBoard(@PathVariable("id") Integer id, Model model) {
-        model.addAttribute("board", boardService.boardView(id));
+        model.addAttribute("board", boardService.getBoard(id));
         return "boardModify";
     }
 
@@ -109,7 +108,7 @@ public class BoardController {
         Claims token = jwtService.checkAuthorizationHeader(request);
         if(token == null) return null;
 
-        Board boardTmp = boardService.boardView(id);
+        Board boardTmp = boardService.getBoard(id);
         boardTmp.update(boardDto.getTitle(), boardDto.getContent());
         boardService.write(boardTmp);
 

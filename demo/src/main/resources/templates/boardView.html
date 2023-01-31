@@ -5,12 +5,77 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>게시글 상세 페이지</title>
+    <style>
+        .reply-form{
+            background-color : LightSteelBlue;
+        }
+        .board-div{
+            background-color : LightBlue;
+        }
+        .reply-div{
+            text-align : center;
+            display : grid;
+            grid-template-columns: 15% 30% 10%;
+        }
+        .reply-btn{
+            display : grid;
+            grid-template-rows: 50% 50%;
+        }
+    </style>
 </head>
 <body>
-    <h1 th:text="${board.title}">게시글 상세 페이지입니다.</h1>
-    <p th:text="${board.content}">내용입니다.</p>
-    <a th:href="@{/board/modify/{id}(id=${board.id})}">수정</a>
-    <a th:href="@{/board/delete(id=${board.id})}">삭제</a>
+    <div class="board-div">
+        <div id="board-id" style="display: none" th:text="${board.id}"></div>
+        <h1 th:text="${board.title}">게시글 상세 페이지입니다.</h1>
+        <p th:text="${board.content}">내용입니다.</p>
+        <a th:href="@{/board/modify/{id}(id=${board.id})}">수정</a>
+        <a th:href="@{/board/delete(id=${board.id})}">삭제</a>
+    </div>
+    <div class="reply-form">
+        <h3>댓글 작성</h3>
+        <textarea id="reply-content"></textarea>
+        <button id="reply-submit">작성</button>
+    </div>
+    <!--댓글 내용에 대한 반복문 필요-->
+    <div class="reply-div">
+        <div>댓글 작성자</div>
+        <p>댓글 내용</p>
+        <div class="reply-btn">
+            <button id="reply-modify">댓글 수정</button>
+            <button id="reply-delete">댓글 삭제</button>
+        <div>
+    </div>
+<script>
+    const boardId = document.getElementById("board-id").innerText;
+    const content = document.getElementById("reply-content");
+    const submit = document.getElementById("reply-submit");
+
+    submit.addEventListener("click", async ()=> {
+        const token = localStorage.getItem("token");
+        const text = content.value;
+        let addReply = null;
+        console.log(text);
+        if(text == null || text == "") return;
+        try{
+            result = await axios.post("/reply/add-reply",
+            {content : text, boardid: boardId}, {
+                headers: {Authorization : `Bearer ${token}`}
+            });
+
+            if(result.data !== "success"){
+                alert("댓글 추가 실패");
+            }else{
+                alert("댓글 추가 성공");
+            }
+
+        }catch(error){
+            console.log(error);
+            alert("댓글 입력 실패");
+            return;
+        }
+    });
+</script>
 </body>
 </html>
