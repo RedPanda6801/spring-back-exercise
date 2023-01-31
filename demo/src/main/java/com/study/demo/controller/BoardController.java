@@ -6,6 +6,7 @@ import com.study.demo.entity.Board;
 import com.study.demo.entity.User;
 import com.study.demo.exception.ForbiddenException;
 import com.study.demo.service.JWTService;
+import com.study.demo.service.ReplyService;
 import com.study.demo.service.UserService;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class BoardController {
 
     @Autowired
     private BoardService boardService;
+
+    @Autowired
+    private ReplyService replyService;
 
     @Autowired
     private UserService userService;
@@ -80,9 +84,11 @@ public class BoardController {
 
     @GetMapping("/board/view/{id}")
     // board/view?id=1 => 파라미터의 id로 들어감
+    // reply 또한 이 컨트롤러에서 호출하도록 함
     public String boardView(Model model, @PathVariable("id") Integer id) {
-        System.out.println(id);
         model.addAttribute("board", boardService.getBoard(id));
+        model.addAttribute("replys", replyService.getReplys(id));
+        System.out.println(model);
         return "boardView";
     }
 

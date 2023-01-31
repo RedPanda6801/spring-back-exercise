@@ -17,7 +17,7 @@
         .reply-div{
             text-align : center;
             display : grid;
-            grid-template-columns: 15% 30% 10%;
+            grid-template-columns: 15% 50% 10%;
         }
         .reply-btn{
             display : grid;
@@ -39,14 +39,24 @@
         <button id="reply-submit">작성</button>
     </div>
     <!--댓글 내용에 대한 반복문 필요-->
-    <div class="reply-div">
-        <div>댓글 작성자</div>
-        <p>댓글 내용</p>
-        <div class="reply-btn">
-            <button id="reply-modify">댓글 수정</button>
-            <button id="reply-delete">댓글 삭제</button>
-        <div>
-    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>작성자</th>
+            <th>댓글</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="reply : ${replys}">
+            <td th:text="${reply.user.getUserid()}"></td>
+            <td th:text="${reply.content}"></td>
+            <td class="reply-btn">
+                <button id="reply-modify">댓글 수정</button>
+                <button id="reply-delete">댓글 삭제</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 <script>
     const boardId = document.getElementById("board-id").innerText;
     const content = document.getElementById("reply-content");
@@ -68,6 +78,7 @@
                 alert("댓글 추가 실패");
             }else{
                 alert("댓글 추가 성공");
+                location.reload();
             }
 
         }catch(error){
