@@ -8,6 +8,9 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>게시글 상세 페이지</title>
     <style>
+        a:hover{
+            color: orange;
+        }
         .reply-form{
             background-color : LightSteelBlue;
         }
@@ -17,7 +20,7 @@
         .reply-div{
             text-align : center;
             display : grid;
-            grid-template-columns: 15% 30% 10%;
+            grid-template-columns: 15% 50% 10%;
         }
         .reply-btn{
             display : grid;
@@ -31,7 +34,7 @@
         <h1 th:text="${board.title}">게시글 상세 페이지입니다.</h1>
         <p th:text="${board.content}">내용입니다.</p>
         <a th:href="@{/board/modify/{id}(id=${board.id})}">수정</a>
-        <a th:href="@{/board/delete(id=${board.id})}">삭제</a>
+        <a id="board-delete">삭제</a>
     </div>
     <div class="reply-form">
         <h3>댓글 작성</h3>
@@ -39,24 +42,58 @@
         <button id="reply-submit">작성</button>
     </div>
     <!--댓글 내용에 대한 반복문 필요-->
-    <div class="reply-div">
-        <div>댓글 작성자</div>
-        <p>댓글 내용</p>
-        <div class="reply-btn">
-            <button id="reply-modify">댓글 수정</button>
-            <button id="reply-delete">댓글 삭제</button>
-        <div>
-    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>작성자</th>
+            <th>댓글</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="reply : ${replys}">
+            <td th:text="${reply.user.getUserid()}"></td>
+            <td width="200px" th:text="${reply.content}"></td>
+            <td class="reply-btn">
+                <button id="reply-modify">댓글 수정</button>
+                <button id="reply-delete">댓글 삭제</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 <script>
     const boardId = document.getElementById("board-id").innerText;
     const content = document.getElementById("reply-content");
     const submit = document.getElementById("reply-submit");
+    const delTag = document.getElementById("board-delete");
+
+    delTag.addEventListener("click", async () => {
+        const token = localStorage.getItem("token");
+
+        try{
+            result = await axios.get(`/board/delete/${boardId}`,
+            {
+                headers: {Authorization : `Bearer ${token}`}
+            });
+
+            if(result.data !== "success"){
+                alert("게시글 삭제 실패");
+            }else{
+                alert("게시글 삭제 성공");
+                location.href = "/board/list";
+            }
+
+        }catch(error){
+            console.log(error);
+            alert("게시글 삭제 실패");
+            return;
+        }
+    });
 
     submit.addEventListener("click", async ()=> {
         const token = localStorage.getItem("token");
         const text = content.value;
-        let addReply = null;
-        console.log(text);
+        let result = null;
+
         if(text == null || text == "") return;
         try{
             result = await axios.post("/reply/add-reply",
@@ -68,6 +105,7 @@
                 alert("댓글 추가 실패");
             }else{
                 alert("댓글 추가 성공");
+                location.reload();
             }
 
         }catch(error){

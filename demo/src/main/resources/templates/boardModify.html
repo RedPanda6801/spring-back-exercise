@@ -5,6 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>Title</title>
 </head>
 <style>
@@ -23,14 +24,48 @@
 <body>
 <div class="layout">
     <div class="input-area">
-        <form th:action="@{/board/update/{id}(id=${board.id})}" method="post">
-            제목 : <input name="title" th:value="${board.title}"/>
-            <br>
-            내용 : <textarea name="content" th:text="${board.content}"></textarea>
-            <br>
-            <button type="submit">수정</button>
-        </form>
+        <div id="board-id" style="display: none" th:text="${board.id}"></div>
+
+        제목 : <input id="title" th:value="${board.title}"/>
+        <br>
+        내용 : <textarea id="content" th:text="${board.content}"></textarea>
+        <br>
+        <button id="update-btn">수정</button>
+
     </div>
+<script>
+    const boardId = document.getElementById("board-id").innerText;
+    const submit = document.getElementById("update-btn");
+    const title = document.getElementById("title");
+    const content = document.getElementById("content");
+
+     submit.addEventListener("click", async ()=> {
+        const token = localStorage.getItem("token");
+        const newTitle = title.value;
+        const newContent = content.value;
+        let result = null;
+        console.log(newTitle, newContent);
+        if(newContent == null || newContent == "" || newTitle == null || newTitle == "") return;
+        try{
+            result = await axios.post(`/board/update/${boardId}`,
+            {content : newContent, title : newTitle}, {
+                headers: {Authorization : `Bearer ${token}`}
+            });
+
+            if(result.data !== "success"){
+                alert("게시글 수정 실패");
+            }else{
+                alert("게시글 수정 성공");
+                location.href = "/board/list";
+            }
+
+        }catch(error){
+            console.log(error);
+            alert("게시글 수정 실패");
+            return;
+        }
+    });
+</script>
 </div>
 </body>
 </html>

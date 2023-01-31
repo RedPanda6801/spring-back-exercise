@@ -6,6 +6,7 @@ import com.study.demo.entity.Board;
 import com.study.demo.entity.User;
 import com.study.demo.exception.ForbiddenException;
 import com.study.demo.service.JWTService;
+import com.study.demo.service.ReplyService;
 import com.study.demo.service.UserService;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class BoardController {
 
     @Autowired
     private BoardService boardService;
+
+    @Autowired
+    private ReplyService replyService;
 
     @Autowired
     private UserService userService;
@@ -80,21 +84,26 @@ public class BoardController {
 
     @GetMapping("/board/view/{id}")
     // board/view?id=1 => 파라미터의 id로 들어감
+    // reply 또한 이 컨트롤러에서 호출하도록 함
     public String boardView(Model model, @PathVariable("id") Integer id) {
-        System.out.println(id);
         model.addAttribute("board", boardService.getBoard(id));
+        model.addAttribute("replys", replyService.getReplys(id));
+        System.out.println(model);
         return "boardView";
     }
 
-    @GetMapping("/board/delete")
-    public String deleteBoard(HttpServletRequest request, Integer id) {
+    @GetMapping("/board/delete/{id}")
+    @ResponseBody
+    public String deleteBoard(HttpServletRequest request, @PathVariable Integer id) {
         // 로그인 정보 확인
         Claims token = jwtService.checkAuthorizationHeader(request);
         if(token == null) return null;
-
+        String writerId = boardService.getBoard(id).getUser().getUserid();
+        if(!writerId.equals(token.get("userId").toString())){
+            return null;
+        }
         boardService.delete(id);
-
-        return "redirect:/board/list";
+        return "success";
     }
 
     @GetMapping("/board/modify/{id}")
@@ -104,15 +113,23 @@ public class BoardController {
     }
 
     @PostMapping("/board/update/{id}")
-    public String updateBoard(HttpServletRequest request, @PathVariable("id") Integer id, BoardDto boardDto) {
+    @ResponseBody
+    public String updateBoard(HttpServletRequest request, @PathVariable("id") Integer id, @RequestBody BoardDto boardDto) {
         Claims token = jwtService.checkAuthorizationHeader(request);
         if(token == null) return null;
-
         Board boardTmp = boardService.getBoard(id);
-        boardTmp.update(boardDto.getTitle(), boardDto.getContent());
-        boardService.write(boardTmp);
-
-        return "redirect:/board/list";
+        // 로그인 사용자와 게시글 작성자 비교
+        String loginUser = token.get("userId").toString();
+        if(!loginUser.equals(boardTmp.getUser().getUserid())) return null;
+        // DB에서 수정 작업
+        try{
+            boardTmp.update(boardDto.getTitle(), boardDto.getContent());
+            boardService.write(boardTmp);
+            return "success";
+        }catch(Exception e){
+            System.out.println(e);
+            return null;
+        }
     }
 
 }
