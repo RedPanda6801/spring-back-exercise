@@ -49,7 +49,7 @@
         <tbody>
         <tr th:each="reply : ${replys}">
             <td th:text="${reply.user.getUserid()}"></td>
-            <td th:text="${reply.content}"></td>
+            <td width="200px" th:text="${reply.content}"></td>
             <td class="reply-btn">
                 <button id="reply-modify">댓글 수정</button>
                 <button id="reply-delete">댓글 삭제</button>
@@ -65,8 +65,8 @@
     submit.addEventListener("click", async ()=> {
         const token = localStorage.getItem("token");
         const text = content.value;
-        let addReply = null;
-        console.log(text);
+        let result = null;
+
         if(text == null || text == "") return;
         try{
             result = await axios.post("/reply/add-reply",

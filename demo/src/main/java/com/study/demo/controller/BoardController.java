@@ -110,15 +110,16 @@ public class BoardController {
     }
 
     @PostMapping("/board/update/{id}")
-    public String updateBoard(HttpServletRequest request, @PathVariable("id") Integer id, BoardDto boardDto) {
+    @ResponseBody
+    public String updateBoard(HttpServletRequest request, @PathVariable("id") Integer id, @RequestBody BoardDto boardDto) {
         Claims token = jwtService.checkAuthorizationHeader(request);
         if(token == null) return null;
-
+        System.out.println(boardDto);
         Board boardTmp = boardService.getBoard(id);
         boardTmp.update(boardDto.getTitle(), boardDto.getContent());
         boardService.write(boardTmp);
 
-        return "redirect:/board/list";
+        return "success";
     }
 
 }
