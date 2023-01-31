@@ -98,9 +98,11 @@ public class BoardController {
         // 로그인 정보 확인
         Claims token = jwtService.checkAuthorizationHeader(request);
         if(token == null) return null;
-        System.out.println(token);
+        String writerId = boardService.getBoard(id).getUser().getUserid();
+        if(!writerId.equals(token.get("userId").toString())){
+            return null;
+        }
         boardService.delete(id);
-
         return "success";
     }
 
