@@ -1,6 +1,7 @@
 package com.study.demo.service;
 
 import com.study.demo.entity.Board;
+import com.study.demo.repository.ReplyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.study.demo.repository.BoardRepository;
@@ -15,6 +16,8 @@ public class BoardService {
     @Autowired
     private BoardRepository boardRepository;
 
+    @Autowired
+    private ReplyService replyService;
     // 글 작성
     @Transactional
     public void write(Board board){
@@ -36,7 +39,6 @@ public class BoardService {
 
     // 게시물 삭제
     public void delete(Integer id){
-
         boardRepository.deleteById(id);
     }
 

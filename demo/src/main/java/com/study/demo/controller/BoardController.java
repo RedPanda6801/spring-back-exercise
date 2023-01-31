@@ -92,15 +92,16 @@ public class BoardController {
         return "boardView";
     }
 
-    @GetMapping("/board/delete")
-    public String deleteBoard(HttpServletRequest request, Integer id) {
+    @GetMapping("/board/delete/{id}")
+    @ResponseBody
+    public String deleteBoard(HttpServletRequest request, @PathVariable Integer id) {
         // 로그인 정보 확인
         Claims token = jwtService.checkAuthorizationHeader(request);
         if(token == null) return null;
-
+        System.out.println(token);
         boardService.delete(id);
 
-        return "redirect:/board/list";
+        return "success";
     }
 
     @GetMapping("/board/modify/{id}")
@@ -117,12 +118,14 @@ public class BoardController {
         Board boardTmp = boardService.getBoard(id);
         // 로그인 사용자와 게시글 작성자 비교
         String loginUser = token.get("userId").toString();
-        if(loginUser.equals(boardTmp.getUser().getUserid())) {
+        if(!loginUser.equals(boardTmp.getUser().getUserid())) return null;
+        // DB에서 수정 작업
+        try{
             boardTmp.update(boardDto.getTitle(), boardDto.getContent());
             boardService.write(boardTmp);
             return "success";
-        }
-        else{
+        }catch(Exception e){
+            System.out.println(e);
             return null;
         }
     }

@@ -21,7 +21,9 @@ public class Board {
 
     private String content;
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board",
+           cascade = CascadeType.ALL
+    )
     List<Reply> replies = new ArrayList<>();
 
     @JsonIgnore
