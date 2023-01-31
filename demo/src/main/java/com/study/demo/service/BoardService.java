@@ -29,7 +29,7 @@ public class BoardService {
     }
 
     // 특정 게시글 불러오기
-    public Board boardView(Integer id){
+    public Board getBoard(Integer id){
         // Optional 값으로 데이터를 받아오기 때문에 get으로 받아와야함
         return boardRepository.findById(id).get();
 

@@ -16,6 +16,7 @@ public class BoardDto {
     private String title;
     private String content;
     private String userId;
+
     public BoardDto(Board board){
         this.id = board.getId();
         this.content = board.getContent();

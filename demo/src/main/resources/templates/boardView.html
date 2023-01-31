@@ -5,6 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>게시글 상세 페이지</title>
     <style>
         .reply-form{
@@ -26,6 +27,7 @@
 </head>
 <body>
     <div class="board-div">
+        <div id="board-id" style="display: none" th:text="${board.id}"></div>
         <h1 th:text="${board.title}">게시글 상세 페이지입니다.</h1>
         <p th:text="${board.content}">내용입니다.</p>
         <a th:href="@{/board/modify/{id}(id=${board.id})}">수정</a>
@@ -46,7 +48,34 @@
         <div>
     </div>
 <script>
+    const boardId = document.getElementById("board-id").innerText;
+    const content = document.getElementById("reply-content");
+    const submit = document.getElementById("reply-submit");
 
+    submit.addEventListener("click", async ()=> {
+        const token = localStorage.getItem("token");
+        const text = content.value;
+        let addReply = null;
+        console.log(text);
+        if(text == null || text == "") return;
+        try{
+            result = await axios.post("/reply/add-reply",
+            {content : text, boardid: boardId}, {
+                headers: {Authorization : `Bearer ${token}`}
+            });
+
+            if(result.data !== "success"){
+                alert("댓글 추가 실패");
+            }else{
+                alert("댓글 추가 성공");
+            }
+
+        }catch(error){
+            console.log(error);
+            alert("댓글 입력 실패");
+            return;
+        }
+    });
 </script>
 </body>
 </html>
