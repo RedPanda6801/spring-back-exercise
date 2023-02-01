@@ -34,4 +34,8 @@ public class Reply {
         this.board = board;
         this.user = user;
     }
+
+    public void update(String content){
+        this.content = content;
+    }
 }

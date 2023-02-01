@@ -26,6 +26,9 @@
             display : grid;
             grid-template-rows: 50% 50%;
         }
+        .invisible{
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -52,10 +55,10 @@
         <tbody>
         <tr th:each="reply : ${replys}">
             <td th:text="${reply.user.getUserid()}"></td>
-            <td width="200px" th:text="${reply.content}"></td>
+            <td width="200px" th:text="${reply.content}">
             <td class="reply-btn">
-                <button id="reply-modify">댓글 수정</button>
-                <button id="reply-delete">댓글 삭제</button>
+                <button class="reply-modify-btn" th:name="${reply.id}">댓글 수정</button>
+                <button class="reply-delete-btn" th:name="${reply.id}">댓글 삭제</button>
             </td>
         </tr>
         </tbody>
@@ -65,10 +68,62 @@
     const content = document.getElementById("reply-content");
     const submit = document.getElementById("reply-submit");
     const delTag = document.getElementById("board-delete");
+    const modifyBtns = document.querySelectorAll(".reply-modify-btn");
+    const deleteBtns = document.querySelectorAll(".reply-delete-btn");
+
+    modifyBtns.forEach((btn) => {
+        btn.addEventListener("click", async (e)=>{
+            const replyId = e.target.name;
+            const token = localStorage.getItem("token");
+
+            try{
+                result = await axios.post(`/reply/update/${replyId}`,
+                {content: content.value},
+                {
+                    headers: {Authorization : `Bearer ${token}`}
+                });
+
+                if(result.data !== "success"){
+                    alert("댓글 수정 실패");
+                }else{
+                    alert("댓글 수정 성공");
+                    location.reload();
+                }
+            }catch(error){
+                console.log(error);
+                alert("댓글 수정 실패");
+                return;
+            }
+        })
+    })
+
+    deleteBtns.forEach((btn) => {
+        btn.addEventListener("click", async (e)=>{
+            const replyId = e.target.name;
+            const token = localStorage.getItem("token");
+
+            try{
+                result = await axios.get(`/reply/delete/${replyId}`,
+                {
+                    headers: {Authorization : `Bearer ${token}`}
+                });
+
+                if(result.data !== "success"){
+                    alert("댓글 삭제 실패");
+                }else{
+                    alert("댓글 삭제 성공");
+                    location.reload();
+                }
+            }catch(error){
+                console.log(error);
+                alert("댓글 삭제 실패");
+                return;
+            }
+        })
+    })
 
     delTag.addEventListener("click", async () => {
         const token = localStorage.getItem("token");
-
         try{
             result = await axios.get(`/board/delete/${boardId}`,
             {
