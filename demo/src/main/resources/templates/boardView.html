@@ -75,7 +75,10 @@
         btn.addEventListener("click", async (e)=>{
             const replyId = e.target.name;
             const token = localStorage.getItem("token");
-
+            if(content.value == "" || content.value == null){
+                alert("내용을 입력하세요");
+                return;
+            }
             try{
                 result = await axios.post(`/reply/update/${replyId}`,
                 {content: content.value},
