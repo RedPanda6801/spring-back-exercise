@@ -88,7 +88,6 @@ public class BoardController {
     public String boardView(Model model, @PathVariable("id") Integer id) {
         model.addAttribute("board", boardService.getBoard(id));
         model.addAttribute("replys", replyService.getReplys(id));
-        System.out.println(model);
         return "boardView";
     }
 

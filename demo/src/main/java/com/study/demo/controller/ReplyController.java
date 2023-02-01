@@ -59,4 +59,47 @@ public class ReplyController {
         }
         return "success";
     }
+
+    @PostMapping("/reply/update/{id}")
+    @ResponseBody
+    public String updateReply(@RequestBody ReplyDto replyDto, HttpServletRequest request, @PathVariable Integer id){
+        // 로그인 정보 확인
+        Claims token = jwtService.checkAuthorizationHeader(request);
+        if(token == null) return null;
+        // 예전 Reply 정보를 가져오기
+        Reply replyTmp = replyService.getReply(id);
+        // 로그인 사용자와 게시글 작성자 비교
+        String loginUser = token.get("userId").toString();
+        if(!loginUser.equals(replyTmp.getUser().getUserid())) return null;
+        // 댓글 수정
+        try{
+            replyTmp.update(replyDto.getContent());
+            replyService.write(replyTmp);
+            return "success";
+        }catch(Exception e){
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @GetMapping("/reply/delete/{id}")
+    @ResponseBody
+    public String deleteReply(@PathVariable Integer id, HttpServletRequest request){
+        // 로그인 정보 확인
+        Claims token = jwtService.checkAuthorizationHeader(request);
+        if(token == null) return null;
+        // 예전 Reply 정보를 가져오기
+        Reply reply = replyService.getReply(id);
+        // 로그인 사용자와 게시글 작성자 비교
+        String loginUser = token.get("userId").toString();
+        if(!loginUser.equals(reply.getUser().getUserid())) return null;
+        // 댓글 수정
+        try{
+            replyService.delete(id);
+            return "success";
+        }catch(Exception e){
+            System.out.println(e);
+            return null;
+        }
+    }
 }

@@ -17,10 +17,15 @@ public class ReplyService {
     public void write(Reply reply){
         replyRepository.save(reply);
     }
+    public void delete(Integer id) {replyRepository.deleteById(id);}
     // 특정 게시글 불러오기
     public List<Reply> getReplys(Integer id){
         // Optional 값으로 데이터를 받아오기 때문에 get으로 받아와야함
         return replyRepository.findAllByBoardId(id);
     }
+    public Reply getReply(Integer id){
+        return replyRepository.findById(id).get();
+    }
+
 
 }
