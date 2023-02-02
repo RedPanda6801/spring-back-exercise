@@ -23,6 +23,15 @@ public class User {
 
     private String phone;
 
+    private String role; // admin, customer, seller
+
     @OneToMany(mappedBy = "user")
     List<Board> boards = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    List<Reply> replies = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    List<Product> products = new ArrayList<>();
+
 }

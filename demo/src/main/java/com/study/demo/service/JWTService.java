@@ -8,7 +8,7 @@ import java.util.Date;
 
 public class JWTService {
 
-    public String makeJwtToken(Integer id, String userid) {
+    public String makeJwtToken(Integer id, String userid, String role) {
         Date now = new Date();
 
         return Jwts.builder()
@@ -16,7 +16,8 @@ public class JWTService {
                 .setIssuer("redpanda") // issuer 설정
                 .setIssuedAt(now) // 발급 시간 설정 (Date 객체만 가능)
                 .setExpiration(new Date(now.getTime() + Duration.ofMinutes(30).toMillis())) // 만료 시 설정 (Date 객체만 가능)
-                .claim("userId", userid) // 비공개 클래임 설정 가능
+                .claim("userId", userid) // 비공개 클레임 설정 가능
+                .claim("role", role)
                 .signWith(SignatureAlgorithm.HS256, "secret") // 시크릿 키 설정
                 .compact();
     }
