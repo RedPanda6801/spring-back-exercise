@@ -57,7 +57,7 @@ public class UserService {
                 return null;
             }
             // 모든 예외처리 통과시 로그인 성공
-            String token = jwtService.makeJwtToken(user.getId(), userid);
+            String token = jwtService.makeJwtToken(user.getId(), userid, user.getRole());
             System.out.printf("부여받은 토큰 : %s%n", token);
 
             // Model에 token을 같이 넘겨주어 프론트에서 localStorage에 저장하게끔 구현

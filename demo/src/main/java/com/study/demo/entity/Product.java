@@ -20,10 +20,12 @@ public class Product {
 
     private String description;
 
+    @Embedded
+    private ProductImage image;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
-
     private User user;
 
     @JsonIgnore
