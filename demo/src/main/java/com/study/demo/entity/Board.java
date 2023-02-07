@@ -21,9 +21,7 @@ public class Board {
 
     private String content;
 
-    @OneToMany(mappedBy = "board",
-           cascade = CascadeType.ALL
-    )
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Reply> replies = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
