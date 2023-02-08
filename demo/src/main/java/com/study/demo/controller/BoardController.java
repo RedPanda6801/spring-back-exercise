@@ -51,7 +51,6 @@ public class BoardController {
         if(token == null) {
             throw new ForbiddenException("403 Forbidden");
         }
-        System.out.println(token);
         // 토큰 내의 페이로드 값을 가져와야 한다.
         List<BoardDto> boardDtos = boardService.boardList().stream().map(BoardDto::new)
                 .collect(Collectors.toList());

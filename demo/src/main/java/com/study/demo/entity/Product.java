@@ -1,6 +1,7 @@
 package com.study.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,4 +28,12 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
+
+    @Builder
+    public Product(String name, Integer price, String description, User user){
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.user = user;
+    }
 }

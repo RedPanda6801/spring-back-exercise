@@ -1,0 +1,37 @@
+package com.study.demo.dto;
+
+import com.study.demo.entity.Board;
+import com.study.demo.entity.Product;
+import com.study.demo.entity.ProductImage;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import javax.persistence.*;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+public class ProductDto {
+    private Integer id;
+
+    private String name;
+
+    private Integer price;
+
+    private String description;
+
+    private String userid;
+    @Embedded
+    private ProductImage image;
+
+    public ProductDto(Product product){
+        this.id = product.getId();
+        this.name = product.getName();
+        this.price = product.getPrice();
+        this.description = product.getDescription();
+        this.image = getImage();
+    }
+}

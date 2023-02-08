@@ -12,12 +12,12 @@ import javax.persistence.Embeddable;
 @Getter
 @Embeddable
 public class ProductImage {
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private String fileName;
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private String fileOriName;
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private String fileUrl;
 }
