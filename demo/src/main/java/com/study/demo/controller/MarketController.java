@@ -1,5 +1,6 @@
 package com.study.demo.controller;
 
+import com.study.demo.dto.BoardDto;
 import com.study.demo.dto.ProductDto;
 import com.study.demo.entity.Product;
 import com.study.demo.entity.User;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class MarketController {
@@ -71,6 +74,20 @@ public class MarketController {
             System.out.println(e);
             return null;
         }
+    }
+
+    @GetMapping("/market/seller/get-my-product")
+    @ResponseBody
+    public List<ProductDto> marketGetMyProduct(HttpServletRequest request){
+        // 로그인 정보 확인
+        Claims token = jwtService.checkAuthorizationHeader(request);
+        if(token == null) return null;
+
+        Integer id = Integer.parseInt(token.get("id").toString());
+
+        List<ProductDto> productDtos = productService.myProductList(id).stream().map(ProductDto::new).collect(Collectors.toList());
+
+        return productDtos;
     }
 }
 

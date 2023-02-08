@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>Seller Page</title>
 </head>
 <body>
@@ -10,5 +11,53 @@
     <h3>내 물건</h3>
     <div id="my-Product">
     </div>
+    <script>
+    const myProductList = document.getElementById("my-Product");
+    const init = async () => {
+        const token = localStorage.getItem("token");
+
+        const getResult = await axios.get(
+            "/market/seller/get-my-product",
+            {
+                headers: {
+                    Authorization : `Bearer ${token}`
+                }
+            }
+        )
+        const myProducts = getResult.data;
+        myProducts.forEach((product)=>{
+            const productDiv = document.createElement("div");
+            const imageDiv = document.createElement("div");
+            const infoDiv = document.createElement("div");
+            const descriptDiv = document.createElement("div");
+            const nameDiv = document.createElement("div");
+            const priceDiv = document.createElement("div");
+
+            productDiv.style.display = "grid";
+            productDiv.style.gridTemplateColumns = "10% 30% 60%";
+            productDiv.style.marginBottom = "10px";
+            productDiv.style.display = "grid";
+            productDiv.style.gridTemplateRows = "50% 50%";
+            imageDiv.style.backgroundColor = "gray";
+            imageDiv.style.width = "50px";
+            imageDiv.style.height = "50px";
+
+            descriptDiv.innerText = `설명 : ${product.description}`;
+            nameDiv.innerText = `제품명 : ${product.name}`;
+            priceDiv.innerText = `가격 : ${product.price}`;
+
+
+            infoDiv.appendChild(nameDiv);
+            infoDiv.appendChild(priceDiv);
+            productDiv.appendChild(imageDiv);
+            productDiv.appendChild(infoDiv);
+            productDiv.appendChild(descriptDiv);
+
+            myProductList.appendChild(productDiv);
+        });
+    };
+
+    init();
+</script>
 </body>
 </html>
