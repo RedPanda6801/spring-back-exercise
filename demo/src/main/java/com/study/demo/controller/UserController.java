@@ -35,7 +35,7 @@ public class UserController {
     @ResponseBody
     public String loginCheck(@RequestBody UserDto userDto){
         // 입력된 정보가 없으면 되돌아감 -> input값으로 받은 데이터는 null이 아닌 것 같다
-        if(userDto.getUserid() == "" || userDto.getPassword() == ""){
+        if(userDto.getUserid() == null || userDto.getPassword() == null){
             return null;
         }
         // 유저 정보를 DB에서 확인
