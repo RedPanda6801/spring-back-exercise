@@ -24,9 +24,6 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Reply> replies = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    List<Product> products = new ArrayList<>();
-
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")

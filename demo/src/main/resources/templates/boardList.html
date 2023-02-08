@@ -51,7 +51,13 @@
         }
 
         const boards = boardObj.data;
-        boards.forEach((board)=>{
+        console.log(boards);
+        if(boards.length == 0){
+            const nullText = document.createElement("h3");
+            nullText.innerText = "게시글이 없습니다";
+            listDiv.appendChild(nullText);
+        }else{
+            boards.forEach((board)=>{
             console.log(board);
             const newDiv = document.createElement("div");
             newDiv.className = "frame";
@@ -69,7 +75,8 @@
             newDiv.addEventListener("click", async ()=>{
                 location.href = `/board/view/${board.id}`;
             })
-        });
+            });
+        }
     };
     renderList();
 </script>

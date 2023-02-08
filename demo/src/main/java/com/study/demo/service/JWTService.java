@@ -16,6 +16,7 @@ public class JWTService {
                 .setIssuer("redpanda") // issuer 설정
                 .setIssuedAt(now) // 발급 시간 설정 (Date 객체만 가능)
                 .setExpiration(new Date(now.getTime() + Duration.ofMinutes(30).toMillis())) // 만료 시 설정 (Date 객체만 가능)
+                .claim("id", id)
                 .claim("userId", userid) // 비공개 클레임 설정 가능
                 .claim("role", role) // value 값이 null이면 payload에 저장되지 않음
                 .signWith(SignatureAlgorithm.HS256, "secret") // 시크릿 키 설정

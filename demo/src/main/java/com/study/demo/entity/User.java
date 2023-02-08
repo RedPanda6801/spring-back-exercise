@@ -1,6 +1,7 @@
 package com.study.demo.entity;
 
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -33,5 +34,4 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     List<Product> products = new ArrayList<>();
-
 }
