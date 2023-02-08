@@ -36,11 +36,11 @@
         let boardObj = null;
         try{
             boardObj = await axios.get(
-            "/board/get-list",
-            {
-                headers: {Authorization : `Bearer ${token}`}
-            }
-        );
+                "/board/get-list",
+                {
+                    headers: {Authorization : `Bearer ${token}`}
+                }
+            );
         }catch(error){
             // 토큰이 없을 때의 예외처리
             if(error.response.status == 403){
@@ -51,8 +51,13 @@
         }
 
         const boards = boardObj.data;
-        boards.forEach((board)=>{
-            console.log(board);
+        console.log(boards);
+        if(boards.length == 0){
+            const nullText = document.createElement("h3");
+            nullText.innerText = "게시글이 없습니다";
+            listDiv.appendChild(nullText);
+        }else{
+            boards.forEach((board)=>{
             const newDiv = document.createElement("div");
             newDiv.className = "frame";
             const idDiv = document.createElement("div");
@@ -69,7 +74,8 @@
             newDiv.addEventListener("click", async ()=>{
                 location.href = `/board/view/${board.id}`;
             })
-        });
+            });
+        }
     };
     renderList();
 </script>

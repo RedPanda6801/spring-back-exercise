@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>MAIN</h1>
+    <button onclick="location.href='/auth/login'">로그인하기</button>
+    <br/>
+    <button id="board-btn" onclick="location.href='/board/list'">게시판 보러가기</button>
+    <button id="market-btn">마켓 보러가기</button>
+<script>
+    const marketBtn = document.getElementById("market-btn");
+    marketBtn.addEventListener("click", async ()=> {
+        const token = localStorage.getItem("token");
+        try{
+            const market = await axios.get(
+                "/market/main",
+                {
+                    headers: {Authorization : `Bearer ${token}`}
+                }
+            );
+            if(market.data === null){
+                alert("로그인하세요");
+                location.href = "/auth/login";
+                return;
+            }else if(market.data === "customer"){
+                location.href = "/market/customer";
+                return;
+            }else if(market.data === "seller"){
+                location.href = "/market/seller";
+                return;
+            }
+        }catch(error){
+            // 토큰이 없을 때의 예외처리
+            console.log(error);
+            if(error.response.status == 403){
+                alert("로그인하세요");
+                location.href = "/auth/login";
+                return;
+            }
+        }
+    })
+
+</script>
+</body>
+</html>

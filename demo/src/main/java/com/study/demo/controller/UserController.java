@@ -1,5 +1,6 @@
 package com.study.demo.controller;
 
+import com.study.demo.dto.UserDto;
 import com.study.demo.entity.User;
 import com.study.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +17,7 @@ public class UserController {
     @GetMapping("/")
     // Token이 없으면 로그인 화면으로 이동하도록 해야함
     public String main() {
-        // 토큰 확인하는 변수
-        boolean login = true;
-
-        if(!login){
-            return "redirect:/auth/login";
-        }else {
-            return "redirect:/board/list";
-        }
+        return "mainSelect";
     }
     // 페이지 매핑
     // 회원가입 화면으로 redirect
@@ -39,13 +33,13 @@ public class UserController {
     // 로그인 작업 수행
     @PostMapping("/auth/login")
     @ResponseBody
-    public String loginCheck(@RequestBody User user){
+    public String loginCheck(@RequestBody UserDto userDto){
         // 입력된 정보가 없으면 되돌아감 -> input값으로 받은 데이터는 null이 아닌 것 같다
-        if(user.getUserid() == "" || user.getPassword() == ""){
+        if(userDto.getUserid() == null || userDto.getPassword() == null){
             return null;
         }
         // 유저 정보를 DB에서 확인
-        String token = userService.userAuth(user);
+        String token = userService.userAuth(userDto);
         // login fail
         if(token == null) {
             return null;

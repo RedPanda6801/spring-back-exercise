@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="shortcut icon" href="#" />
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-
+    to-fit=no"
+    />
+    <!-- Bootstrap CDN -->
+    <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous"
+    />
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"
+    ></script>
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"
+    ></script>
+    <script
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+    body {
+      height: 100%;
+    }
+
+    body {
+      display: flex;
+      padding-top: 40px;
+      padding-bottom: 40px;
+      background-color: #f5f5f5;
+    }
+    input {
+      align-items: center;
+    }
+    #add-btn {
+      text-align : center;
+    }
+  </style>
+    <title>Add Product Form</title>
+</head>
+<body>
+<main class="form-signin w-100 m-auto">
+    <h1 class="h3 mb-3 fw-normal">Please sign up</h1>
+    <div class="form-floating">
+        <h5 for="name">Name</h5>
+        <input
+                name="name"
+                type="text"
+                class="form-control"
+                id="name"
+                placeholder="2자 이상 한글만 입력해주세요"
+                required
+                pattern="^[ㄱ-ㅎ|가-힣]+$"
+        />
+    </div>
+    <div class="form-floating">
+        <h5 for="price">Price</h5>
+        <input
+                name="price"
+                type="number"
+                class="form-control"
+                id="price"
+                placeholder="1000원 단위로 입력해주세요"
+                required
+        />
+    </div>
+    <div class="form-floating">
+        <h5 for="image">Image</h5>
+        <input
+                name="name"
+                type="file"
+                class="form-control"
+                id="image"
+                required
+        />
+    </div>
+    <div class="form-floating">
+        <h5>Description</h5>
+        <textarea id="description" class="description"></textarea>
+    </div>
+    <button
+            id="add-btn"
+            class="w-100 btn btn-lg btn-primary"
+    >
+        추가하기
+    </button>
+    <script>
+        const nameInput = document.getElementById("name");
+        const priceInput = document.getElementById("price");
+        // const imageInput = document.getElementById("image");
+        const descriptionInput = document.getElementById("description");
+        const addBtn = document.getElementById("add-btn");
+
+        addBtn.addEventListener("click", async () => {
+            const token = localStorage.getItem("token");
+
+            let formData = new FormData();
+            formData.append("name", nameInput.value);
+            formData.append("price", priceInput.value);
+            formData.append("description", description.value);
+            //formData.append("image", imageInput.files[0]);
+            try{
+                const addProduct = await axios.post(
+                    "/market/seller/add-product",
+                    formData,
+                    {
+                        headers: {
+                            Authorization : `Bearer ${token}`,
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }
+                )
+                if(addProduct.data == "success"){
+                    alert("물건 추가 성공");
+                    location.href="/market/seller";
+                }
+                else{
+                    alert("물건 추가 실패");
+                }
+            }catch(error){
+                console.log(error);
+            }
+        });
+    </script>
+</main>
+</body>
+</html>
