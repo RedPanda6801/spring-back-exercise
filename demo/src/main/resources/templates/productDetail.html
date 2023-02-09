@@ -1,10 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Product Detail</title>
 </head>
+<style>
+    .infoForm{
+        display: grid;
+        grid-template-columns : 40% 50%;
+    }
+    .formContainer{
+        padding : 10px;
+        background-color : gray;
+        text-align : center;
+        justify-content : center;
+        border-radius : 5px;
+    }
+</style>
 <body>
-
+    <h1>제품 상세 정보</h1>
+    <div id="product-info" class="formContainer">
+        <div class="infoForm">
+            <div>제품 명 : </div>
+            <div id="product-name" th:text="${product.name}"></div>
+        </div>
+        <div class="infoForm">
+            <div>제품 가격 : </div>
+            <div id="product-price" th:text="${product.price}"></div>
+        </div>
+        <div class="infoForm">
+            <div>제품 설명 : </div>
+            <div id="product-description" th:text="${product.description}"></div>
+        </div>
+        <button id="purchase-btn">구매하기</button>
+    </div>
 </body>
 </html>
