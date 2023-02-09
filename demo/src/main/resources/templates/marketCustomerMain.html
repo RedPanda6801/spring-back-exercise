@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -9,8 +9,63 @@
     <h1>오늘의 마켓</h1>
     <div id="market-list">
         <h2>상품 리스트</h2>
-        <div id="market-get-list">
-        </div>
+        <div id="all-product-list"></div>
     </div>
+<script>
+    const productsDiv = document.getElementById("all-product-list");
+
+    productsDiv.style.display = "grid";
+    productsDiv.style.gridTemplateColumns = "40% 40%";
+    productsDiv.style.gridGap = "30px";
+
+    const init = async () => {
+        const token = localStorage.getItem("token");
+
+        try{
+            const allProducts = await axios.get(
+                "/market/customer/all-product",
+                {
+                    headers: {
+                        Authorization : `Bearer ${token}`
+                    }
+                }
+            )
+            const productArr = allProducts.data;
+            console.log(allProducts);
+            productArr.forEach((product) => {
+                const contentDiv = document.createElement("div");
+                const idDiv = document.createElement("div");
+                const nameDiv = document.createElement("div");
+                const priceDiv = document.createElement("div");
+                const descriptDiv = document.createElement("div");
+                const useridDiv = document.createElement("div");
+
+                contentDiv.style.backGroundColor = "gray";
+                idDiv.innerText = `제품 번호 : ${product.id}`;
+                nameDiv.innerText = `제품 명 : ${product.name}`;
+                priceDiv.innerText = `제품 가격 : ${product.price}`;
+                descriptDiv.innerText = `제품 설명 : ${product.description}`;
+
+                contentDiv.appendChild(idDiv);
+                contentDiv.appendChild(nameDiv);
+                contentDiv.appendChild(priceDiv);
+                contentDiv.appendChild(descriptDiv);
+                //contentDiv.appendChild();
+
+                contentDiv.addEventListener("click", ()=> {
+                    location.href = `/market/customer/product-detail/${product.id}`;
+                });
+
+                productsDiv.appendChild(contentDiv);
+            });
+
+        }catch(error){
+            console.log(error);
+            return;
+        }
+    }
+
+    init();
+</script>
 </body>
 </html>
