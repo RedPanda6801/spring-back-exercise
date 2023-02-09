@@ -16,8 +16,12 @@
         justify-content : center;
         border-radius : 5px;
     }
+    .disabled{
+        display: none;
+    }
 </style>
 <body>
+    <div id="product-id" class="disabled" th:text="${product.id}"></div>
     <h1>제품 상세 정보</h1>
     <div id="product-info" class="formContainer">
         <div class="infoForm">
@@ -32,7 +36,34 @@
             <div>제품 설명 : </div>
             <div id="product-description" th:text="${product.description}"></div>
         </div>
-        <button id="purchase-btn">구매하기</button>
+        <button id="toggle-btn">구매하기</button>
     </div>
+    <div id="order-form" class="disabled">
+        <h1>제품 주문</h1>
+        <div class="formContainer">
+            <div class="infoForm">
+                <div>구매 수량 : </div>
+                <input type="number"/>
+            </div>
+            <div class="infoForm">
+                <div>구매자 요청 : </div>
+                <textarea></textarea>
+            </div>
+            <button id="purchase-btn">구매하기</button>
+        </div>
+    </div>
+<script>
+    const orderForm = document.getElementById("order-form");
+    const toggleBtn = document.getElementById("toggle-btn");
+    const purchaseBtn = document.getElementById("purchase-btn");
+    const productId = document.getElementById("product-id").innerText;
+
+    toggleBtn.addEventListener("click", () => {
+        orderForm.classList.toggle("disabled");
+    });
+    purchaseBtn.addEventListener("click", () => {
+        console.log(productId);
+    });
+</script>
 </body>
 </html>
