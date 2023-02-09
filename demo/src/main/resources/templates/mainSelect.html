@@ -22,6 +22,7 @@
                     headers: {Authorization : `Bearer ${token}`}
                 }
             );
+
             if(market.data === null){
                 alert("로그인하세요");
                 location.href = "/auth/login";
