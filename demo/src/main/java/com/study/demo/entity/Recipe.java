@@ -1,6 +1,7 @@
 package com.study.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,4 +29,12 @@ public class Recipe {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="product_id")
     private Product product;
+
+    @Builder
+    public Recipe(String description, User user, Integer amount, Product product){
+        this.description = description;
+        this.user = user;
+        this.amount = amount;
+        this.product = product;
+    }
 }

@@ -90,7 +90,13 @@
                 }
             }
         )
-        console.log(orderRequest);
+        if(orderRequest.data == 'success'){
+            alert("주문이 완료되었습니다.");
+            location.href = "/market/customer";
+        }
+        else{
+            alert("주문에 실패했습니다.");
+        }
     });
 </script>
 </body>
