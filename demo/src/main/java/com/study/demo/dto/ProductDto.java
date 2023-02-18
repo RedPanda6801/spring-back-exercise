@@ -32,11 +32,9 @@ public class ProductDto {
     public ProductDto(Product product){
         this.id = product.getId();
         this.name = product.getName();
-        if(this.price == null) this.price = 0;
-        else this.price = product.getPrice();
+        this.price = product.getPrice();
         this.description = product.getDescription();
-        if(this.amount == null) this.amount = 0;
-        else this.amount = product.getAmount();
+        this.amount = product.getAmount();
         this.image = product.getImage();
         this.userid = product.getUser().getUserid();
     }

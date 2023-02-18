@@ -36,4 +36,7 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     List<Product> products = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    List<Recipe> recipes = new ArrayList<>();
 }

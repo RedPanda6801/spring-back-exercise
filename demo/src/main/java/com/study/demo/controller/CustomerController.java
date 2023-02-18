@@ -1,6 +1,7 @@
 package com.study.demo.controller;
 
 import com.study.demo.dto.ProductDto;
+import com.study.demo.dto.RecipeDto;
 import com.study.demo.entity.Product;
 import com.study.demo.service.JWTService;
 import com.study.demo.service.ProductService;
@@ -8,9 +9,7 @@ import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -41,7 +40,14 @@ public class CustomerController {
     public String marketProductDetail(Model model, @PathVariable Integer id){
         Product product = productService.getProductById(id);
         ProductDto productDto = new ProductDto(product);
+
         model.addAttribute("product", productDto);
         return "productDetail";
+    }
+
+    @PostMapping("/market/customer/product-detail/order")
+    @ResponseBody
+    public void marketProductOrder(HttpServletRequest request, @RequestBody RecipeDto recipeDto){
+        System.out.println(recipeDto);
     }
 }
