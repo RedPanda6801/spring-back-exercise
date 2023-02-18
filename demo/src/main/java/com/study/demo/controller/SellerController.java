@@ -61,9 +61,9 @@ public class SellerController {
                 .name(productDto.getName())
                 .price(productDto.getPrice())
                 .description(productDto.getDescription())
+                .amount(productDto.getAmount())
                 .user(user)
                 .build();
-        System.out.println(product);
         try{
             productService.write(product);
             return "success";

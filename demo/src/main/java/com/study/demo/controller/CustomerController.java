@@ -40,7 +40,8 @@ public class CustomerController {
     @GetMapping("/market/customer/product-detail/{id}")
     public String marketProductDetail(Model model, @PathVariable Integer id){
         Product product = productService.getProductById(id);
-        model.addAttribute("product", product);
+        ProductDto productDto = new ProductDto(product);
+        model.addAttribute("product", productDto);
         return "productDetail";
     }
 }

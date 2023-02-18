@@ -21,6 +21,8 @@ public class Product {
 
     private String description;
 
+    private Integer amount; // BigDecimal class 사용 시 DB에 String으로 저장
+
     @Embedded
     private ProductImage image;
 
@@ -30,10 +32,11 @@ public class Product {
     private User user;
 
     @Builder
-    public Product(String name, Integer price, String description, User user){
+    public Product(String name, Integer price, String description, User user, Integer amount){
         this.name = name;
         this.price = price;
         this.description = description;
         this.user = user;
+        this.amount = amount;
     }
 }

@@ -26,6 +26,8 @@ public class User {
 
     private String role; // admin, customer, seller
 
+    private Boolean enabled;
+
     @OneToMany(mappedBy = "user")
     List<Board> boards = new ArrayList<>();
 

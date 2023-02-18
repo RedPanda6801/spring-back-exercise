@@ -6,6 +6,7 @@
     <title>Seller Page</title>
 </head>
 <body>
+    <button onclick="location.href='/'">뒤로가기</button>
     <h1>판매자 페이지</h1>
     <button id="add-product" onclick="location.href='/market/seller/add-page'">물건 올리기</button>
     <h3>내 물건</h3>
@@ -25,6 +26,7 @@
             }
         )
         const myProducts = getResult.data;
+
         myProducts.forEach((product)=>{
             const productDiv = document.createElement("div");
             const imageDiv = document.createElement("div");
@@ -32,6 +34,7 @@
             const descriptDiv = document.createElement("div");
             const nameDiv = document.createElement("div");
             const priceDiv = document.createElement("div");
+            const amountDiv = document.createElement("div");
 
             productDiv.style.display = "grid";
             productDiv.style.gridTemplateColumns = "10% 30% 60%";
@@ -45,10 +48,11 @@
             descriptDiv.innerText = `설명 : ${product.description}`;
             nameDiv.innerText = `제품명 : ${product.name}`;
             priceDiv.innerText = `가격 : ${product.price}`;
-
+            amountDiv.innerText = `개수 : ${product.amount?product.amount:0}개`;
 
             infoDiv.appendChild(nameDiv);
             infoDiv.appendChild(priceDiv);
+            infoDiv.appendChild(amountDiv);
             productDiv.appendChild(imageDiv);
             productDiv.appendChild(infoDiv);
             productDiv.appendChild(descriptDiv);
