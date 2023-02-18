@@ -79,6 +79,17 @@
         />
     </div>
     <div class="form-floating">
+        <h5 for="amount">Amount</h5>
+        <input
+                name="amount"
+                type="number"
+                class="form-control"
+                id="amount"
+                placeholder="수량을 입력해주세요"
+                required
+        />
+    </div>
+    <div class="form-floating">
         <h5 for="image">Image</h5>
         <input
                 name="name"
@@ -102,6 +113,7 @@
         const nameInput = document.getElementById("name");
         const priceInput = document.getElementById("price");
         // const imageInput = document.getElementById("image");
+        const amountInput = document.getElementById("amount");
         const descriptionInput = document.getElementById("description");
         const addBtn = document.getElementById("add-btn");
 
@@ -112,6 +124,7 @@
             formData.append("name", nameInput.value);
             formData.append("price", priceInput.value);
             formData.append("description", description.value);
+            formData.append("amount", amountInput.value);
             //formData.append("image", imageInput.files[0]);
             try{
                 const addProduct = await axios.post(

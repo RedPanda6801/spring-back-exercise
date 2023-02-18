@@ -6,42 +6,35 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor
-public class Product {
+public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    private String name;
-
-    private Integer price;
 
     private String description;
 
     private Integer amount; // BigDecimal class 사용 시 DB에 String으로 저장
 
-    @Embedded
-    private ProductImage image;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
 
-    @OneToMany(mappedBy = "user")
-    List<Recipe> recipes = new ArrayList<>();
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="product_id")
+    private Product product;
 
     @Builder
-    public Product(String name, Integer price, String description, User user, Integer amount){
-        this.name = name;
-        this.price = price;
+    public Recipe(String description, User user, Integer amount, Product product){
         this.description = description;
         this.user = user;
         this.amount = amount;
+        this.product = product;
     }
 }

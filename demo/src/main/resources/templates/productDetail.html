@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Product Detail</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <style>
     .infoForm{
@@ -33,6 +34,10 @@
             <div id="product-price" th:text="${product.price}"></div>
         </div>
         <div class="infoForm">
+            <div>잔여 수량 : </div>
+            <div id="product-amount" th:text="${product.amount}"></div>
+        </div>
+        <div class="infoForm">
             <div>제품 설명 : </div>
             <div id="product-description" th:text="${product.description}"></div>
         </div>
@@ -43,11 +48,11 @@
         <div class="formContainer">
             <div class="infoForm">
                 <div>구매 수량 : </div>
-                <input type="number"/>
+                <input id="purchase-amount" type="number"/>
             </div>
             <div class="infoForm">
                 <div>구매자 요청 : </div>
-                <textarea></textarea>
+                <textarea id="purchase-order"></textarea>
             </div>
             <button id="purchase-btn">구매하기</button>
         </div>
@@ -58,11 +63,40 @@
     const purchaseBtn = document.getElementById("purchase-btn");
     const productId = document.getElementById("product-id").innerText;
 
+    let amount = 0;
     toggleBtn.addEventListener("click", () => {
-        orderForm.classList.toggle("disabled");
+        amount = document.getElementById("product-amount").innerText;
+        if(amount != 0) orderForm.classList.toggle("disabled");
+        else alert("재고가 없습니다.");
     });
-    purchaseBtn.addEventListener("click", () => {
-        console.log(productId);
+    purchaseBtn.addEventListener("click", async () => {
+        const purchaseAmount = document.getElementById("purchase-amount").value;
+        const purchaseOrder = document.getElementById("purchase-order").value;
+
+        if(purchaseAmount > amount){
+            alert("재고 초과입니다.");
+            return;
+        }
+        const token = localStorage.getItem("token");
+
+        const orderRequest = await axios.post(
+            "/market/customer/product-detail/order",
+            {
+                amount : purchaseAmount, description : purchaseOrder, productid : productId
+            },
+            {
+                headers: {
+                    Authorization : `Bearer ${token}`
+                }
+            }
+        )
+        if(orderRequest.data == 'success'){
+            alert("주문이 완료되었습니다.");
+            location.href = "/market/customer";
+        }
+        else{
+            alert("주문에 실패했습니다.");
+        }
     });
 </script>
 </body>

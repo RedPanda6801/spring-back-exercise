@@ -23,6 +23,8 @@ public class ProductDto {
 
     private String description;
 
+    private Integer amount;
+
     private String userid;
     @Embedded
     private ProductImage image;
@@ -32,6 +34,7 @@ public class ProductDto {
         this.name = product.getName();
         this.price = product.getPrice();
         this.description = product.getDescription();
+        this.amount = product.getAmount();
         this.image = product.getImage();
         this.userid = product.getUser().getUserid();
     }

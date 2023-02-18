@@ -26,6 +26,8 @@ public class User {
 
     private String role; // admin, customer, seller
 
+    private Boolean enabled;
+
     @OneToMany(mappedBy = "user")
     List<Board> boards = new ArrayList<>();
 
@@ -34,4 +36,7 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     List<Product> products = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    List<Recipe> recipes = new ArrayList<>();
 }
