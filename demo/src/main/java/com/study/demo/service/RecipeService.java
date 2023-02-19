@@ -20,9 +20,6 @@ public class RecipeService {
     }
 
     public Recipe getRecipeByProductId(Integer id){
-        System.out.println(id);
-        Recipe recipe = recipeRepository.findByProductId(id);
-        System.out.println(recipe);
-        return recipe;
+        return recipeRepository.findByProductId(id);
     }
 }
