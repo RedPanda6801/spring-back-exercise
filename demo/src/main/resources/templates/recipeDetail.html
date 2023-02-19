@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Recipe Detail</title>
+</head>
+<body>
+    구매자 아이디 : <span id="recipe-userid" th:text="${recipe.user.getUserid()}"></span><br/>
+    구매 개수 : <span id="recipe-amount" th:text="${recipe.amount}"></span><br/>
+    요청 사항 : <span id="recipe-description" th:text="${recipe.description}"></span><br/>
+</body>
+</html>

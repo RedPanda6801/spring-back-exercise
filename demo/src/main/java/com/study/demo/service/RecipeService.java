@@ -18,4 +18,11 @@ public class RecipeService {
     public void write(Recipe recipe){
         recipeRepository.save(recipe);
     }
+
+    public Recipe getRecipeByProductId(Integer id){
+        System.out.println(id);
+        Recipe recipe = recipeRepository.findByProductId(id);
+        System.out.println(recipe);
+        return recipe;
+    }
 }

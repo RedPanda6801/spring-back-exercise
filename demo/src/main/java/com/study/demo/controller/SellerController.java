@@ -2,9 +2,11 @@ package com.study.demo.controller;
 
 import com.study.demo.dto.ProductDto;
 import com.study.demo.entity.Product;
+import com.study.demo.entity.Recipe;
 import com.study.demo.entity.User;
 import com.study.demo.service.JWTService;
 import com.study.demo.service.ProductService;
+import com.study.demo.service.RecipeService;
 import com.study.demo.service.UserService;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class SellerController {
     UserService userService;
 
     @Autowired
+    RecipeService recipeService;
+
+    @Autowired
     ProductService productService;
 
     JWTService jwtService = new JWTService();
@@ -32,6 +37,14 @@ public class SellerController {
 
     @GetMapping("/market/seller/add-page")
     public String marketSellerAddPage(){return "addProductForm";}
+
+    @GetMapping("/market/seller/recipe/{id}")
+    public String marketSellerRecipePage(Model model, @PathVariable Integer id){
+        Recipe recipe = recipeService.getRecipeByProductId(id);
+        // 없는 레시피에 대한 주문 내역 예외처리 필요
+        model.addAttribute("recipe", recipe);
+        return "recipeDetail";
+    }
 
     @GetMapping("/market/main")
     @ResponseBody
