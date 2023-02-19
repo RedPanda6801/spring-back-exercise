@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Recipe Detail</title>
+</head>
+<body>
+    <div id="recipe-id" style="display : none" th:text="${recipe.id}"></div>
+    구매자 아이디 : <span id="recipe-userid" th:text="${recipe.user.getUserid()}"></span><br/>
+    구매 개수 : <span id="recipe-amount" th:text="${recipe.amount}"></span><br/>
+    요청 사항 : <span id="recipe-description" th:text="${recipe.description}"></span><br/>
+    <button id="accept-recipe">구매 승인</button>
+    <button id="deny-recipe">구매 취소</button>
+    <textarea id="deny-reason" placeholder="취소 사유를 적어주세요"></textarea>
+<script>
+    const acceptBtn = document.getElementById("accept-recipe");
+    const denyBtn = document.getElementById("deny-recipe");
+    const recipeId = document.getElementById("recipe-id").innerText;
+
+    acceptBtn.addEventListener("click", async () => {
+        console.log(recipeId);
+    });
+
+    denyBtn.addEventListener("click", async () => {
+        const reason = document.getElementById("deny-reason").value;
+
+    });
+</script>
+</body>
+</html>

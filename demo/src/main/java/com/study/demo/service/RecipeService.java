@@ -18,4 +18,8 @@ public class RecipeService {
     public void write(Recipe recipe){
         recipeRepository.save(recipe);
     }
+
+    public Recipe getRecipeByProductId(Integer id){
+        return recipeRepository.findByProductId(id);
+    }
 }
