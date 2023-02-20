@@ -1,6 +1,7 @@
 package com.study.demo.controller;
 
 import com.study.demo.dto.ProductDto;
+import com.study.demo.dto.RecipeDto;
 import com.study.demo.entity.Product;
 import com.study.demo.entity.Recipe;
 import com.study.demo.entity.User;
@@ -40,9 +41,9 @@ public class SellerController {
 
     @GetMapping("/market/seller/recipe/{id}")
     public String marketSellerRecipePage(Model model, @PathVariable Integer id){
-        Recipe recipe = recipeService.getRecipeByProductId(id);
+        List<Recipe> recipes = recipeService.getAllRecipeByProductId(id);
         // 없는 레시피에 대한 주문 내역 예외처리 필요
-        model.addAttribute("recipe", recipe);
+        model.addAttribute("recipes", recipes);
         return "recipeDetail";
     }
 
@@ -98,5 +99,16 @@ public class SellerController {
         List<ProductDto> productDtos = productService.myProductList(id).stream().map(ProductDto::new).collect(Collectors.toList());
 
         return productDtos;
+    }
+
+    @PostMapping("/market/seller/recipe/accept")
+    @ResponseBody
+    public String marketRecipeAccept(HttpServletRequest request, @RequestBody RecipeDto recipeDto){
+        // 로그인 정보 확인
+        Claims token = jwtService.checkAuthorizationHeader(request);
+        if(token == null) return null;
+
+        System.out.println(recipeDto.getId());
+        return "success";
     }
 }
